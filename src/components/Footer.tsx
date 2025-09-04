@@ -110,7 +110,7 @@ const Footer: React.FC = () => {
             <input
               type="email"
               placeholder="Enter your email"
-              className="p-2 rounded-l-md border border-white/20 bg-white text-[#41B2A3] placeholder:text-[#41B2A3]/70 flex-grow" // Added flex-grow
+              className="p-2 rounded-l-md border border-white bg-white text-[#41B2A3] placeholder:text-[#41B2A3]/70 flex-grow" // Added flex-grow
             />
             <button className="bg-[#41B2A3] text-white px-5 py-2 rounded-r-md border-4 border-white hover:bg-white hover:text-[#41B2A3] transition-colors hover:border-[#41B2A3]">
               Subscribe
