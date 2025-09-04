@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../assets/logo.webp";
+import logo from "../assets/Logo.webp";
 import heroImg from '../assets/hero2.webp';
 
 const About: React.FC = () => {

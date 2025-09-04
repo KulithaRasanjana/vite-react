@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useLocation, Link } from "react-router-dom";
-import logo from "../assets/logo.webp";
+import logo from "../assets/Logo.webp";
 
 const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
