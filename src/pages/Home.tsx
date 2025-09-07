@@ -1,36 +1,70 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Star } from 'lucide-react';
 import heroImg from "../assets/heroImg.webp";
 import luxuriousroom1 from "../assets/luxuriousroom1.webp";
 import luxuriousroom2 from "../assets/luxuriousroom2.webp";
 import luxuriousroom3 from "../assets/luxuriousroom3.webp";
 import luxuriousroombg from "../assets/luxuriousroomsbg.webp";
-// Import profile images
 import profileMiriam from "../assets/Miriam.webp";
 import profileAnastasiya from "../assets/Anastasiya.webp";
 import profilePeter from "../assets/Peter.webp";
 
 const Home: React.FC = () => {
+  const navigate = useNavigate();
+
+  // Helper function to format date as "YYYY-MM-DD"
+  const formatDate = (date: Date) => {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const [bookingDetails, setBookingDetails] = useState({
+    roomType: "Standard",
+    personCount: 1,
+    checkIn: formatDate(today),
+    checkOut: formatDate(tomorrow),
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setBookingDetails((prevState) => ({
+      ...prevState,
+      [name]: name === "personCount" ? parseInt(value) : value,
+    }));
+  };
+
+  const handleBookNowClick = () => {
+    navigate("/booking", {
+      state: {
+        personCount: bookingDetails.personCount,
+        checkIn: bookingDetails.checkIn,
+        checkOut: bookingDetails.checkOut,
+        roomType: bookingDetails.roomType,
+      },
+    });
+  };
+
   return (
     <main>
       {/* Hero Section */}
       <section className="relative h-screen md:h-[90vh] flex items-center md:bg-gray-100">
-        {/* Mobile: Full-width dark background image with overlay */}
         <div
           className="absolute inset-0 bg-cover bg-center md:hidden"
           style={{ backgroundImage: `url(${heroImg})` }}
         >
           <div className="absolute inset-0 bg-black opacity-50"></div>
         </div>
-
-        {/* Desktop: Image on the right half */}
         <div
           className="hidden md:block absolute top-0 right-12 w-1/2 h-full bg-cover bg-center"
           style={{ backgroundImage: `url(${heroImg})` }}
         ></div>
-
-        {/* Content - Visible on both mobile and desktop */}
         <div className="relative z-10 w-full px-6 md:w-1/2 md:px-12 md:-mt-25 text-white md:text-black">
           <h2
             className="text-[#41B2A3] mb-2"
@@ -42,7 +76,6 @@ const Home: React.FC = () => {
           >
             Light House Beach Home
           </h2>
-
           <h1
             className="leading-tight"
             style={{
@@ -53,7 +86,6 @@ const Home: React.FC = () => {
           >
             Hotel for every <br /> moment rich in <br /> emotion
           </h1>
-
           <p className="text-lg text-gray-200 md:text-gray-700 mt-4"
             style={{
               fontFamily: "'Raleway', sans-serif",
@@ -62,14 +94,13 @@ const Home: React.FC = () => {
             }}>
             Every moment feels like the first time <br /> in Lighthouse Beach Home.
           </p>
-
           <div className="mt-6 flex items-center space-x-4">
-            <a
-              href="/booking"
+            <button
+              onClick={handleBookNowClick}
               className="bg-[#41B2A3] text-white px-8 py-3 rounded-full font-medium no-underline"
             >
               Book now
-            </a>
+            </button>
             <Link
               to="/explore"
               className="flex items-center space-x-2 cursor-pointer text-lg font-medium text-white md:text-black"
@@ -83,29 +114,63 @@ const Home: React.FC = () => {
 
       {/* Booking Section */}
       <div className="relative z-20 md:-mt-30">
-        <div className="flex flex-col md:flex-row justify-around p-6 bg-white mx-6 md:mx-12 text-center md:text-left space-y-4 md:space-y-0 shadow-lg">
+        <div className="flex flex-col md:flex-row justify-around p-3 bg-white mx-6 md:mx-12 text-center md:text-left space-y-4 md:space-y-0 shadow-lg">
           <div>
             <i className="fas fa-location-dot text-xl mb-2"></i>{" "}
             <b>Location</b> <br /> Matara
           </div>
           <div>
-            <i className="fas fa-bed text-xl mb-2"></i> <b>Room type</b> <br /> Standard
+            <i className="fas fa-bed text-xl mb-2"></i> <b>Room type</b>
+            <br />
+            <select
+              name="roomType"
+              value={bookingDetails.roomType}
+              onChange={handleInputChange}
+              className="w-32 text-center border-b border-gray-400 focus:outline-none"
+            >
+              <option value="Standard">Standard</option>
+            </select>
           </div>
           <div>
-            <i className="fas fa-user text-xl mb-2"></i> <b>Person</b> <br /> 01
+            <i className="fas fa-user text-xl mb-2"></i> <b>Person</b>
+            <br />
+            <input
+              type="number"
+              name="personCount"
+              value={bookingDetails.personCount}
+              onChange={handleInputChange}
+              className="w-16 text-center border-b border-gray-400 focus:outline-none"
+              min="1"
+            />
           </div>
           <div>
-            <i className="fas fa-calendar-alt text-xl mb-2"></i> <b>Check in</b> <br /> 20 Aug 2025
+            <i className="fas fa-calendar-alt text-xl mb-2"></i> <b>Check in</b>
+            <br />
+            <input
+              type="date"
+              name="checkIn"
+              value={bookingDetails.checkIn}
+              onChange={handleInputChange}
+              className="w-32 text-center border-b border-gray-400 focus:outline-none"
+            />
           </div>
           <div>
-            <i className="fas fa-calendar-alt text-xl mb-2"></i> <b>Check out</b> <br /> 22 Aug 2025
+            <i className="fas fa-calendar-alt text-xl mb-2"></i> <b>Check out</b>
+            <br />
+            <input
+              type="date"
+              name="checkOut"
+              value={bookingDetails.checkOut}
+              onChange={handleInputChange}
+              className="w-32 text-center border-b border-gray-400 focus:outline-none"
+            />
           </div>
-          <a
-            href="/booking"
+          <button
+            onClick={handleBookNowClick}
             className="bg-[#41B2A3] text-white px-9 py-3 rounded-md no-underline"
           >
             Book now
-          </a>
+          </button>
         </div>
       </div>
 
@@ -121,7 +186,6 @@ const Home: React.FC = () => {
           We offer modern (5 star) hotel facilities for your comfort.
         </p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mt-5 pr-12 pl-12">
-          {/* The change is in the className of the div below */}
           <div className="bg-[#f8f8f8] p-5 rounded-lg flex flex-col items-center justify-center h-[200px] transition-transform duration-300 ease-in-out hover:scale-105 cursor-pointer">
             <i className="fas fa-person-swimming text-3xl mb-2"></i>
             <span>Beach Access</span>
@@ -166,12 +230,8 @@ const Home: React.FC = () => {
           backgroundPosition: 'center',
         }}
       >
-        {/* Overlay with reduced opacity */}
         <div className="absolute inset-0 bg-[#41B2A3] opacity-80"></div>
-
-        {/* Content */}
         <div className="relative z-10">
-
           <h2
             style={{
               fontFamily: "'Raleway'",
@@ -194,7 +254,7 @@ const Home: React.FC = () => {
                   alt="Room"
                   className="w-full h-[360px] rounded-lg object-cover pl-6 pr-6 pt-6"
                 />
-                <p className="p-3 text-left  pl-6 pr-6 ">
+                <p className="p-3 text-left pl-6 pr-6">
                   Free Wifi, Extra sheets, Breakfast, and Room Service
                 </p>
               </div>
@@ -249,8 +309,8 @@ const Home: React.FC = () => {
                   </span>
                 </div>
                 <p className="my-2 text-gray-700 text-justify relative">
-                  <i className="fa-solid fa-quote-left text-3xl absolute -top-4 -left-4 text-[#C1B29E]"></i>
-                  {t.text} <i className="fa-solid fa-quote-right text-3xl absolute -bottom-4 -right-4 text-[#C1B29E]"></i>
+                  <i className="fa-solid fa-quote-left text-1xl absolute -left-4 text-[#C1B29E]"></i>
+                  {t.text} <i className="fa-solid fa-quote-right text-1xl absolute text-[#C1B29E]"></i>
                 </p>
               </div>
               <div className="item-bottom flex items-center gap-3 mt-4">

@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useLocation } from "react-router-dom"; // Import useLocation
 import heroImg from '../assets/hero2.webp';
 import emailjs from '@emailjs/browser';
 import { AppConfig } from '../utils/config';
 
-// Extend the Window interface to include the grecaptcha object for TypeScript
 declare global {
   interface Window {
     grecaptcha: any;
@@ -12,46 +12,54 @@ declare global {
 
 const Form: React.FC = () => {
   const form = useRef<HTMLFormElement>(null);
+  const location = useLocation(); // Initialize the hook
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
     type: "",
-    checkIn: "",
     country: "",
     email: "",
     room: "",
+    checkIn: "",
     checkOut: "",
     personCount: "",
     message: "",
   });
-  const [status, setStatus] = useState("idle"); // 'idle', 'sending', 'sent', 'error'
+  const [status, setStatus] = useState("idle");
   const [isRecaptchaReady, setIsRecaptchaReady] = useState(false);
 
-  // Load the EmailJS public key and reCAPTCHA script on component mount
   useEffect(() => {
-    // Initialize EmailJS public key with the new template details
+    // Initialize EmailJS and reCAPTCHA
     if (AppConfig.emailJsBooking.publicKey) {
       emailjs.init(AppConfig.emailJsBooking.publicKey);
     }
     
-    // Dynamically load the reCAPTCHA script
     const script = document.createElement("script");
     script.src = `https://www.google.com/recaptcha/api.js?render=${AppConfig.recaptchaSiteKey}`;
     script.async = true;
-    script.onload = () => {
-      setIsRecaptchaReady(true);
-    };
+    script.onload = () => setIsRecaptchaReady(true);
     script.onerror = () => {
       console.error("Failed to load reCAPTCHA script.");
       setStatus("error");
     };
     document.body.appendChild(script);
 
+    // Check for state from the Home page and pre-fill form
+    if (location.state) {
+      const { personCount, checkIn, checkOut, roomType } = location.state as { personCount: string; checkIn: string; checkOut: string; roomType: string };
+      setFormData(prevState => ({
+        ...prevState,
+        personCount: personCount || "",
+        checkIn: checkIn || "",
+        checkOut: checkOut || "",
+        type: roomType || ""
+      }));
+    }
+
     return () => {
-      // Clean up the script tag when the component unmounts
       document.body.removeChild(script);
     };
-  }, []);
+  }, [location.state]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -64,40 +72,34 @@ const Form: React.FC = () => {
 
     if (form.current && isRecaptchaReady) {
       try {
-        // Execute reCAPTCHA to get the token
         const token = await window.grecaptcha.execute(AppConfig.recaptchaSiteKey, { action: 'booking_form' });
-
-        // Create a hidden input to hold the reCAPTCHA token.
         const tokenInput = document.createElement('input');
         tokenInput.type = 'hidden';
         tokenInput.name = 'g-recaptcha-response';
         tokenInput.value = token;
         form.current.appendChild(tokenInput);
 
-        // Send the form data with the reCAPTCHA token using EmailJS
         await emailjs.sendForm(
           AppConfig.emailJsBooking.serviceID,
           AppConfig.emailJsBooking.templateIDs,
           form.current,
         );
 
-        // Remove the hidden token input after sending to clean up the form
         form.current.removeChild(tokenInput);
 
         setStatus("sent");
         setFormData({ 
             name: "", 
             phone: "", 
-            type: "", 
-            checkIn: "", 
+            type: "",  
             country: "", 
             email: "", 
             room: "", 
+            checkIn: "",
             checkOut: "", 
             personCount: "", 
             message: "" 
         });
-
       } catch (error) {
         setStatus("error");
         console.error("EmailJS Error:", error);
@@ -118,7 +120,7 @@ const Form: React.FC = () => {
     if (status === 'sent') {
       return (
         <div className="text-center p-4 bg-green-100 text-green-800 rounded-md">
-          <p>Thank you! Your message has been sent successfully. We will get back to you shortly.</p>
+          <p>Thank you! Your message has been sent successfully. We will get back to you.</p>
           <button 
             onClick={() => setStatus('idle')}
             className="mt-4 bg-[#41B2A3] text-white px-4 py-2 rounded-md hover:bg-opacity-80 transition-colors"
@@ -237,7 +239,6 @@ const Form: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Check-in Group */}
                 <div className="flex flex-col items-start w-full">
                   <label className="text-sm font-medium text-gray-700 mb-1">Check In</label>
                   <input
@@ -249,8 +250,6 @@ const Form: React.FC = () => {
                     className="w-full border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-[#41B2A3] transition-all"
                   />
                 </div>
-
-                {/* Check-out Group */}
                 <div className="flex flex-col items-start w-full">
                   <label className="text-sm font-medium text-gray-700 mb-1">Check Out</label>
                   <input
@@ -263,9 +262,8 @@ const Form: React.FC = () => {
                   />
                 </div>
               </div>
-
-              {/* PersonCount */}
-              <div>
+              <div className="flex flex-col items-start w-full">
+                <label className="text-sm font-medium text-gray-700 mb-1">Person</label>
                 <input
                   type="number"
                   name="personCount"
@@ -276,8 +274,6 @@ const Form: React.FC = () => {
                   className="w-full border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-[#41B2A3] transition-all"
                 />
               </div>
-
-              {/* Message Textarea */}
               <div>
                 <textarea
                   name="message"
@@ -288,7 +284,6 @@ const Form: React.FC = () => {
                   className="w-full border border-gray-300 p-3 rounded-md min-h-[120px] focus:outline-none focus:ring-2 focus:ring-[#41B2A3] transition-all"
                 />
               </div>
-
               <button
                 type="submit"
                 disabled={status === 'sending' || !isRecaptchaReady}

@@ -92,7 +92,7 @@ const Header: React.FC = () => {
             </Link>
           ))}
           <a
-            href="#"
+            href="/booking"
             className="bg-[#41B2A3] text-white px-6 py-3 rounded-md text-xl no-underline mt-8"
             onClick={() => setIsOpen(false)}
           >

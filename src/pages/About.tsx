@@ -24,13 +24,13 @@ const About: React.FC = () => {
       </section>
 
       {/* About Content */}
-      <section className="container mx-auto px-6 py-16 items-start justify-start">
+      <section className="container mx-auto px-6 lg:px-10 py-16 items-start justify-start">
         <div className="pr-10 pl-10">
           <p className="text-justify text-gray-600 leading-relaxed mb-4"
             style={{
               fontFamily: "'Mulish'",
               fontWeight: 600,
-              fontSize: "20px",
+              fontSize: "17px",
             }}
           >
             Welcome to Light House Beach Home, a cozy family-run retreat tucked beside the iconic Dondra Lighthouse in Matara. Overlooking a tranquil bay with direct beach access, our homestay offers the perfect blend of comfort, relaxation, and Sri Lankan charm.
@@ -39,7 +39,7 @@ const About: React.FC = () => {
             style={{
               fontFamily: "'Mulish'",
               fontWeight: 600,
-              fontSize: "20px",
+              fontSize: "17px",
             }}
           >
             Wake up to the sound of the ocean, enjoy stunning sea views from your balcony, and unwind in our peaceful garden with hammocks and swings. Each room is designed with your comfort in mind, featuring private bathrooms, air conditioning, and thoughtful touches for a restful stay.
@@ -48,7 +48,7 @@ const About: React.FC = () => {
             style={{
               fontFamily: "'Mulish'",
               fontWeight: 600,
-              fontSize: "20px",
+              fontSize: "17px",
             }}
           >
             Our in-house café serves fresh breakfasts with tropical fruits, local specialties, and international favorites all with the ocean just steps away. For adventurers, snorkeling, cycling, and guided tours are available, while those seeking calm can enjoy beach strolls and quiet sunsets.
@@ -57,7 +57,7 @@ const About: React.FC = () => {
             style={{
               fontFamily: "'Mulish'",
               fontWeight: 600,
-              fontSize: "20px",
+              fontSize: "17px",
             }}
           >
             What truly sets us apart is our warm hospitality. Guests consistently praise our friendly service, homely atmosphere, and unbeatable location. With superb ratings for cleanliness, comfort, and value, Light House Beach Home is more than just a stay it’s an experience.Whether you’re here for a romantic escape, family holiday, or peaceful getaway, we invite you to feel at home by the sea.
@@ -66,7 +66,7 @@ const About: React.FC = () => {
             style={{
               fontFamily: "'Mulish'",
               fontWeight: 600,
-              fontSize: "20px",
+              fontSize: "17px",
             }}
           >
             At Light House Beach Home, every detail is crafted to make your stay memorable. From the gentle sea breeze drifting through your window to the personalized recommendations from our hosts, you’ll feel cared for from the moment you arrive. Our homestay is not just a place to sleep, but a gateway to experiencing the authentic beauty and culture of southern Sri Lanka.
@@ -75,7 +75,7 @@ const About: React.FC = () => {
             style={{
               fontFamily: "'Mulish'",
               fontWeight: 600,
-              fontSize: "20px",
+              fontSize: "17px",
             }}
           >
             Whether you’re exploring the historic Dondra Lighthouse, discovering hidden beaches, or simply sipping tea while watching the waves, each moment here is designed to bring peace and joy.

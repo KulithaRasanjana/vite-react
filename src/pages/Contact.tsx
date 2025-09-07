@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import heroImg from '../assets/hero2.webp';
-import mapImg from '../assets/map.webp';
 import emailjs from '@emailjs/browser';
 import { AppConfig } from '../utils/config';
 
@@ -27,7 +26,7 @@ const Contact: React.FC = () => {
     if (AppConfig.emailJsContact.publicKey) {
       emailjs.init(AppConfig.emailJsContact.publicKey);
     }
-    
+
     // Dynamically load the reCAPTCHA script
     const script = document.createElement("script");
     script.src = `https://www.google.com/recaptcha/api.js?render=${AppConfig.recaptchaSiteKey}`;
@@ -102,7 +101,7 @@ const Contact: React.FC = () => {
       return (
         <div className="text-center p-4 bg-green-100 text-green-800 rounded-md">
           <p>Thank you! Your message has been sent successfully. We will get back to you shortly.</p>
-          <button 
+          <button
             onClick={() => setStatus('idle')}
             className="mt-4 bg-[#41B2A3] text-white px-4 py-2 rounded-md hover:bg-opacity-80 transition-colors"
           >
@@ -140,9 +139,9 @@ const Contact: React.FC = () => {
       </section>
 
       {/* Contact Section */}
-      <section className="container mx-auto px-5 py-16 flex flex-wrap gap-10">
+      <section className="container mx-auto px-5 py-16 flex flex-col md:flex-row md:justify-between gap-10">
         {/* Form */}
-        <div className="min-w-[300px] w-full bg-white p-8">
+        <div className="min-w-[300px] w-full md:w-1/2 bg-white p-8">
           {renderStatusMessage()}
           {status !== 'sent' && (
             <form ref={form} onSubmit={handleSubmit} className="space-y-5">
@@ -200,16 +199,8 @@ const Contact: React.FC = () => {
             </form>
           )}
         </div>
-      </section>
-
-      {/* Map Section */}
-      <section>
-        <img
-          src={mapImg}
-          alt="Map Location"
-          className="w-full h-full object-cover"
-        />
-        <div className="container mx-auto px-5 py-16 flex flex-wrap gap-10">
+        {/* Contact Info */}
+        <div className="min-w-[300px] w-full md:w-1/2 bg-white p-8">
           <div className="max-w-3xl mx-auto">
             <h3 className="text-xl font-bold text-[#41B2A3] mb-4 p-4">
               Contact Details
@@ -242,6 +233,20 @@ const Contact: React.FC = () => {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Map Section */}
+      <section className="w-full h-[500px]">
+        <iframe
+          src="https://www.google.com/maps?q=Light+house+beach+home&output=embed"
+          width="100%"
+          height="100%"
+          style={{ border: 0 }}
+          allowFullScreen
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          title="Lighthouse Road, Devinuwara, Sri Lanka"
+        ></iframe>
       </section>
     </div>
   );
