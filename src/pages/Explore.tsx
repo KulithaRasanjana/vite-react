@@ -1,19 +1,65 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import explorerheroImg from "../assets/explorerheroImg.webp";
 import luxuriousroom from "../assets/luxuriousroom.webp";
 import beachaccess from "../assets/beachaccess.webp";
 import resturant from "../assets/resturant.webp";
+import beachrock from "../assets/beachrock.webp"
+
+// Placeholder for the fifth image
+const placeholderImg = explorerheroImg;
+
+// Create an array of all images for the slideshow
+const images = [
+  beachrock,
+  beachaccess,
+  placeholderImg
+];
 
 const Explore: React.FC = () => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    // Set up an interval to change the image every 2 seconds
+    const intervalId = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 2000);
+
+    // Clean up the interval when the component unmounts
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const goToSlide = (slideIndex: number) => {
+    setCurrentImageIndex(slideIndex);
+  };
+
   return (
     <div className="bg-white text-black">
-      {/* Hero Section */}
-      <section className="hero">
-        <img
-          src={explorerheroImg}
-          alt="Beach view"
-          className="w-full h-[700px] object-cover"
-        />
+      {/* Hero Section with Image Slider */}
+      <section className="relative h-[600px] w-full overflow-hidden">
+        {images.map((img, index) => (
+          <img
+            key={index}
+            src={img}
+            alt="Beach view"
+            className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${
+              index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+            }`}
+          />
+        ))}
+        <div className="absolute inset-0 flex flex-col justify-end items-center pb-8">
+          <div className="flex space-x-4">
+            {images.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToSlide(index)}
+                className={`w-3 h-3 rounded-full transition-colors duration-300 ${
+                  index === currentImageIndex ? 'bg-white' : 'bg-gray-500'
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* Title */}
